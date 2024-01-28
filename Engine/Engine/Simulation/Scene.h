@@ -28,7 +28,7 @@ namespace Engine
         ~Scene();
         void Destroy();
         void Update(GLFWwindow* window);
-        void CreateGeometries(int def);
+        void CreateGeometries(int def, int type);
         void InitializeModels(const Renderer& renderer);
         void UpdateTime();
         

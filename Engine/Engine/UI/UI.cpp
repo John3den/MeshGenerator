@@ -28,7 +28,7 @@ namespace Engine
         ImGui::NewFrame();
     }
     
-    void UI::RenderUI(int& geometryDefinition)
+    void UI::RenderUI(int& geometryDefinition, int& geometryType)
     {
         {
             static float f = 0.0f;
@@ -38,9 +38,9 @@ namespace Engine
             ImGui::Begin("Panel", &t, flags);
             if (ImGui::Button("Mesh generation mode", ImVec2(200, 50)))
             {
-                ;
+                geometryType = 1 - geometryType;
             }
-            ImGui::Text(geometryDefinition == 0 ? "UV" : "Simple lighting");
+            ImGui::Text(geometryType == 0 ? "UV sphere" : "Icosphere");
             ImGui::SetWindowPos(ImVec2(0, 0));
             ImGui::SetWindowSize(ImVec2(200, 800));
             ImGui::SliderInt("Definition",&geometryDefinition, 5, 32);

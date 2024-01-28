@@ -14,7 +14,7 @@ namespace Engine
         public:
         void GenerateUVSphere(float radius, int definition);
         void GenerateIcosphere(float radius, int definition);
-        Geometry(float radius, int def);
+        Geometry(float radius, int def, int type);
         GLfloat vertices[MAX_MEMORY];
         GLuint indices[MAX_MEMORY];
         ~Geometry();

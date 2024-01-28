@@ -18,7 +18,7 @@ namespace Engine
     {
         public:
         Renderer();
-        
+
         const std::shared_ptr<Shader> GetLightShader() const;
         
         static GLFWwindow* Init();
@@ -27,6 +27,7 @@ namespace Engine
         void Destroy();
         void InitUI(GLFWwindow* window);
         int GetDefinition() const;
+        int geometryType = 0;
         static const unsigned int width = 800;
         static const unsigned int height = 800;
         
@@ -34,6 +35,7 @@ namespace Engine
         std::shared_ptr<Shader> phong;
         
         int geometryDefinition = 5;
+
         
         void ActivateShader();
         void Clear();

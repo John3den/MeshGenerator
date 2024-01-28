@@ -39,7 +39,7 @@ namespace Engine
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        GLFWwindow* window = glfwCreateWindow(width, height, "Solar", NULL, NULL);
+        GLFWwindow* window = glfwCreateWindow(width, height, "Mesh Generator", NULL, NULL);
         if (window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -71,7 +71,7 @@ namespace Engine
     void Renderer::Frame(const Scene& scene)
     {
         Draw(scene);
-        UI::RenderUI(geometryDefinition);
+        UI::RenderUI(geometryDefinition, geometryType);
     }
     void Renderer::RenderFrame(const Scene& scene)
     {

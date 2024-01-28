@@ -20,9 +20,9 @@ namespace Engine
         InitializeModels(renderer);
     }
     
-    void Scene::CreateGeometries(int definition)
+    void Scene::CreateGeometries(int definition, int type)
     {
-        Geometry* g = new Geometry(1, definition);
+        Geometry* g = new Geometry(1, definition, type);
         objects.push_back(g);
     }
     float Scene::GetTime() const
@@ -31,7 +31,7 @@ namespace Engine
     }
     void Scene::InitializeModels(const Renderer& renderer)
     {
-        CreateGeometries(renderer.GetDefinition());
+        CreateGeometries(renderer.GetDefinition(), renderer.geometryType);
         VAO tempvao = VAO();
         tempvao.Bind();
         VBO tempvbo = VBO((*objects[0]).vertices, sizeof((*objects[0]).vertices));
@@ -69,7 +69,6 @@ namespace Engine
     }
     Scene::~Scene()
     {
-        
         delete objects[0];
     }
     VAO Scene::GetVAO(int i) const

@@ -12,7 +12,7 @@ namespace Engine
         public:
         static void Init(GLFWwindow* window);
         static void CreateUIFrame();
-        static void RenderUI(int& lightingType);
+        static void RenderUI(int& lightingType, int& type);
         static void ClearUI();
         
     };

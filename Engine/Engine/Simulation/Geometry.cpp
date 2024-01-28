@@ -13,11 +13,19 @@ int counter(int mode)
 }
 namespace Engine
 {
-    Geometry::Geometry(float radius, int definition)
+    Geometry::Geometry(float radius, int definition, int type)
     {
         counter(1);
         
-        GenerateIcosphere(radius, definition/9);
+        if (type == 1)
+        {
+            GenerateIcosphere(radius, definition / 9);
+        }
+        else 
+        {
+            GenerateUVSphere(radius, definition);
+        }
+
     }
     
     Geometry::~Geometry()
