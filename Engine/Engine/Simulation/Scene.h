@@ -6,6 +6,8 @@
 #include "EBO.h"
 #include "Camera.h"
 #include "Renderer.h"
+#include "SceneSettings.h"
+
 namespace Engine
 {
     class Skybox;
@@ -17,22 +19,24 @@ namespace Engine
     class Scene
     {
         public:
+
         Scene(const Renderer& renderer);
-        
         float GetTime() const;
         VAO GetVAO(int i) const;
         VBO GetVBO(int i) const;
         EBO GetEBO(int i) const;
-        Geometry GetGeometry(int i) const;
+        Geometry& GetGeometry(int i) const;
         std::shared_ptr<Camera> GetCamera() const;
         ~Scene();
-        void Destroy();
         void Update(GLFWwindow* window);
-        void CreateGeometries(int def, int type);
+        void const CreateGeometries(const DrawSettings& settings);
         void InitializeModels(const Renderer& renderer);
         void UpdateTime();
         
-        private:
+        private: 
+
+        int keepCenteringFlag;
+        int centeringFlag;
         static std::shared_ptr<Camera> camera;
         std::vector<Geometry*> objects;
         std::vector<VAO> vao;

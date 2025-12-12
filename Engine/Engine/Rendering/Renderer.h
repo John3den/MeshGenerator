@@ -9,7 +9,7 @@
 #include "UI.h"
 #include "Scene.h"
 #include "FailedToCreateWindowException.h"
-
+#include "SceneSettings.h"
 namespace Engine
 {
     class Scene;
@@ -23,23 +23,20 @@ namespace Engine
         
         static GLFWwindow* Init();
         void NewFrame();
-        void RenderFrame(const Scene& scene);
+        void RenderFrame(Scene& scene);
         void Destroy();
         void InitUI(GLFWwindow* window);
-        int GetDefinition() const;
-        int geometryType = 0;
+        const DrawSettings& const GetSettings() const;
+        
         static const unsigned int width = 800;
         static const unsigned int height = 800;
         
         private:
-        std::shared_ptr<Shader> phong;
-        
-        int geometryDefinition = 5;
-
-        
+        std::shared_ptr<Shader> phongLightingShader;
+        DrawSettings settings;
         void ActivateShader();
         void Clear();
-        void Frame(const Scene& scene);
+        void Frame(Scene& scene);
         void Draw(const Scene& scene);
     };
 }

@@ -84,6 +84,9 @@
     <ClCompile Include="Engine\Engine\Simulation\Geometry.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Engine\Simulation\SceneSettings.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default.vert" />
@@ -175,6 +178,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Engine\Simulation\Icosahedron.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Engine\Simulation\SceneSettings.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "framework.h"
 #include "scene.h"
+#include "SceneSettings.h"
 
 std::shared_ptr<Engine::Camera>	Engine::Scene::camera(new Engine::Camera(glm::vec3(-0.4f, 0.0f, 15.0f), 45.0f, 0.1f, 1000.0f));
 
@@ -18,20 +19,23 @@ namespace Engine
     Scene::Scene(const Renderer& renderer)
     {
         InitializeModels(renderer);
+        centeringFlag = renderer.GetSettings().focusOnCenterFlag;
+        keepCenteringFlag = renderer.GetSettings().keepCenteringFlag;
     }
     
-    void Scene::CreateGeometries(int definition, int type)
+    void const Scene::CreateGeometries( const DrawSettings& settings) 
     {
-        Geometry* g = new Geometry(1, definition, type);
+        Geometry* g = new Geometry(1, settings.geometryDefinition, settings.geometryType);
         objects.push_back(g);
     }
     float Scene::GetTime() const
     {
         return 0;
     }
+
     void Scene::InitializeModels(const Renderer& renderer)
     {
-        CreateGeometries(renderer.GetDefinition(), renderer.geometryType);
+        CreateGeometries(renderer.GetSettings());
         VAO tempvao = VAO();
         tempvao.Bind();
         VBO tempvbo = VBO((*objects[0]).vertices, sizeof((*objects[0]).vertices));
@@ -47,20 +51,18 @@ namespace Engine
         ebo.push_back(tempebo);
         
     }
-    
-    void Scene::Destroy()
-    {
-        vao[0].Delete();
-        vbo[0].Delete();
-        ebo[0].Delete();
-    }
+   
     
     void Scene::Update(GLFWwindow* window)
     {
         if (camera->IsCursorHidden())
         ImGui::SetMouseCursor(ImGuiMouseCursor_None);
         UpdateTime();
-        camera->Inputs(window);
+        camera->ProcessInput(window);
+        if (centeringFlag || keepCenteringFlag) {
+          camera->FocusOn(glm::vec3(0, 0, 0));
+          centeringFlag = false;
+        }
         camera->updateMatrix();
     }
     std::shared_ptr<Camera> Scene::GetCamera() const
@@ -70,6 +72,9 @@ namespace Engine
     Scene::~Scene()
     {
         delete objects[0];
+        vao[0].Delete();
+        vbo[0].Delete();
+        ebo[0].Delete();
     }
     VAO Scene::GetVAO(int i) const
     {
@@ -84,7 +89,7 @@ namespace Engine
         return ebo[i];
     }
     
-    Geometry Scene::GetGeometry(int i) const
+    Geometry& Scene::GetGeometry(int i) const
     {
         return *objects[i];
     }

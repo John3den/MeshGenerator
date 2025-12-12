@@ -12,10 +12,13 @@ namespace Engine
         model = glm::mat4(1.0f);
         model = glm::translate(model, position);
         //bind textures, buffers, normal maps and make a drawcall
-        glUniformMatrix4fv(glGetUniformLocation((*GetLightShader()).GetID(), "model"), 1, GL_FALSE, glm::value_ptr(model));
-        scene.GetCamera()->Matrix((*GetLightShader()), "camMatrix");
+        glUniform1i(glGetUniformLocation((*GetLightShader()).GetID(), "useLighting"), settings.directionalLighting ? 1 : 0);
+        glUniformMatrix4fv(glGetUniformLocation((*GetLightShader()).GetID(), "model"), 1, 
+                                                GL_FALSE, glm::value_ptr(model));
+        scene.GetCamera()->SendCameraMatrixToUniform((*GetLightShader()));
         scene.GetVAO(0).Bind();
-        glDrawElements(GL_TRIANGLES, sizeof(scene.GetGeometry(0).indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, sizeof(scene.GetGeometry(0).indices) / sizeof(int), 
+                       GL_UNSIGNED_INT, 0);
     }
     
     void Renderer::Destroy()
@@ -53,27 +56,33 @@ namespace Engine
     }
     
     Renderer::Renderer() :
-    phong(new Shader("shaders/default.vert", "shaders/default.frag"))
+    phongLightingShader(new Shader("shaders/default.vert", "shaders/default.frag"))
     {
         glm::vec3 position = glm::vec3(0.0f, 0.0f, 10.0f);
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, position);
         
-        phong->Activate();
-        glUniformMatrix4fv(glGetUniformLocation(phong->GetID(), "model"), 1, GL_FALSE, glm::value_ptr(model));
+        phongLightingShader->Activate();
+
+        glUniformMatrix4fv(glGetUniformLocation(phongLightingShader->GetID(), "model"), 1, 
+                                                GL_FALSE, glm::value_ptr(model));
         glEnable(GL_DEPTH_TEST);
     }
     
     const std::shared_ptr<Shader> Renderer::GetLightShader() const
     {
-        return phong;
+        return phongLightingShader;
     }
-    void Renderer::Frame(const Scene& scene)
+    void Renderer::Frame(Scene& scene)
     {
+      if (settings.showWireframe)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         Draw(scene);
-        UI::RenderUI(geometryDefinition, geometryType);
+        UI::RenderAndPollUI(settings);
     }
-    void Renderer::RenderFrame(const Scene& scene)
+    void Renderer::RenderFrame(Scene& scene)
     {
         ActivateShader();
         Frame(scene);
@@ -88,11 +97,14 @@ namespace Engine
     {
         UI::Init(window);
     }
-    
-    int Renderer::GetDefinition() const
+
+    const DrawSettings& const Renderer::GetSettings() const
     {
-        return geometryDefinition;
+      return settings;
     }
+
+
+    
     
 }
 

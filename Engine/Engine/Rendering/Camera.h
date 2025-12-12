@@ -11,6 +11,9 @@
 #include"shaderClass.h"
 namespace Engine
 {
+  const float CAMERA_VERTICALCLAMP = 85.0f;
+  const float CAMERA_DEFAULTSPEED = 0.4f;
+  const float CAMERA_FASTSPEED = 0.1f;
     class Camera
     {
         public:
@@ -20,11 +23,10 @@ namespace Engine
         glm::vec3 GetDirectionUp() const;
         glm::vec3 GetPosition() const;
         bool IsCursorHidden() const;
-        
+        void FocusOn(glm::vec3 focalPoint);
         void updateMatrix();
-        void Matrix(const Shader& shader, const char* uniform);
-        void Inputs(GLFWwindow* window);
-        
+        void SendCameraMatrixToUniform(const Shader& shader);
+        void ProcessInput(GLFWwindow* window);
         
         private:
         const float FOVdeg;

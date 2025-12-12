@@ -8,7 +8,8 @@ namespace Engine
 {
     const int MAX_MEMORY = 300000;
     const int VERTEX_SIZE = 6;
-    
+    const int GEOMETRY_MINDEFINITION = 5;
+    const int GEOMETRY_MAXDEFINITION = 32;
     class Geometry
     {
         public:

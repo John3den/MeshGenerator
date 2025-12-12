@@ -3,6 +3,7 @@
 
 namespace Engine
 {
+
     void UI::Init(GLFWwindow* window)
     {
         const char* glsl_version = "#version 420";
@@ -18,7 +19,6 @@ namespace Engine
         
         bool show_demo_window = true;
         bool show_another_window = false;
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     }
     
     void UI::CreateUIFrame()
@@ -28,22 +28,29 @@ namespace Engine
         ImGui::NewFrame();
     }
     
-    void UI::RenderUI(int& geometryDefinition, int& geometryType)
+    void UI::RenderAndPollUI(DrawSettings& settings)
     {
         {
+            settings.focusOnCenterFlag = false;
             static float f = 0.0f;
             static int counter = 0;
             static ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove;
             bool t = true;
             ImGui::Begin("Panel", &t, flags);
-            if (ImGui::Button("Mesh generation mode", ImVec2(200, 50)))
-            {
-                geometryType = 1 - geometryType;
+            if (ImGui::Button("Mesh generation mode", ImVec2(UI_WIDTH, UI_BUTTONWIDTH))) {
+                settings.geometryType = 1 - settings.geometryType;
             }
-            ImGui::Text(geometryType == 0 ? "UV sphere" : "Icosphere");
+            if (ImGui::Button("Focus on center", ImVec2(UI_WIDTH, UI_BUTTONWIDTH))) {
+              settings.focusOnCenterFlag = true;
+            }
+            ImGui::Text(settings.geometryType == 0 ? "UV sphere" : "Icosphere");
             ImGui::SetWindowPos(ImVec2(0, 0));
-            ImGui::SetWindowSize(ImVec2(200, 800));
-            ImGui::SliderInt("Definition",&geometryDefinition, 5, 32);
+            ImGui::SetWindowSize(ImVec2(UI_WIDTH, UI_HEIGHT));
+            ImGui::SliderInt(" ",&settings.geometryDefinition, Engine::GEOMETRY_MINDEFINITION, Engine::GEOMETRY_MAXDEFINITION);
+            ImGui::Checkbox("Show wireframe", &settings.showWireframe);
+            ImGui::Checkbox("Directional lighting", &settings.directionalLighting);
+            ImGui::Checkbox("Keep focus on center", &settings.keepCenteringFlag);
+
             ImGui::End();
         }
         ImGui::Render();

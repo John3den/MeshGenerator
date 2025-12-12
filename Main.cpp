@@ -28,7 +28,6 @@ int main()
         renderer.RenderFrame(scene);
         glfwSwapBuffers(window);
         glfwPollEvents();
-        scene.Destroy();
     }
     renderer.Destroy();
     glfwDestroyWindow(window);

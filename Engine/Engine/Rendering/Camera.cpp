@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "framework.h"
 #include"Camera.h"
+#include "UI.h"
 namespace Engine
 {
     Camera::Camera(glm::vec3 position, float FOV, float nearPlane, float farPlane) :
@@ -17,6 +18,11 @@ namespace Engine
         glm::mat4 view = glm::lookAt(Position, Position + Orientation, Up);
         glm::mat4 projection = glm::perspective(glm::radians(FOVdeg), (float)Renderer::width / Renderer::height, nearPlane, farPlane);
         cameraMatrix = projection * view;
+    }
+
+    void Camera::FocusOn(glm::vec3 focalPoint)
+    {
+      Orientation = glm::normalize(focalPoint - Position);
     }
     
     glm::vec3 Camera::GetOrientation() const
@@ -39,12 +45,12 @@ namespace Engine
         return Position;
     }
     
-    void Camera::Matrix(const Shader& shader, const char* uniform)
+    void Camera::SendCameraMatrixToUniform(const Shader& shader)
     {
-        glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
+        glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "camMatrix"), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
     }
     
-    void Camera::Inputs(GLFWwindow* window)
+    void Camera::ProcessInput(GLFWwindow* window)
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
@@ -72,11 +78,11 @@ namespace Engine
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         {
-            speed = 0.4f;
+            speed = CAMERA_FASTSPEED;
         }
         else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         {
-            speed = 0.1f;
+            speed = CAMERA_DEFAULTSPEED;
         }
         
         
@@ -85,24 +91,24 @@ namespace Engine
             double mouseX;
             double mouseY;
             glfwGetCursorPos(window, &mouseX, &mouseY);
-            if (mouseX > 200)
+            if (mouseX > Engine::UI_WIDTH)
             {
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
                 cursorHidden = true;
                 if (firstClick)
                 {
                     glfwSetCursorPos(window, (Renderer::width / 2), (Renderer::height / 2));
+                    mouseX = Renderer::height / 2;
+                    mouseY = (Renderer::width / 2);
                     firstClick = false;
                 }
-                
                 
                 float rotX = sensitivity * (float)(mouseY - (Renderer::height / 2)) / Renderer::height;
                 float rotY = sensitivity * (float)(mouseX - (Renderer::width / 2)) / Renderer::width;
                 
                 glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
-                
-                
-                if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+
+                if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(CAMERA_VERTICALCLAMP))
                 {
                     Orientation = newOrientation;
                 }

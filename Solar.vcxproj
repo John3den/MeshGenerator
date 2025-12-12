@@ -154,6 +154,7 @@
     <ClCompile Include="Engine\Engine\Rendering\ShaderClass.cpp" />
     <ClCompile Include="Engine\Engine\Simulation\Geometry.cpp" />
     <ClCompile Include="Engine\Engine\Simulation\Scene.cpp" />
+    <ClCompile Include="Engine\Engine\Simulation\SceneSettings.cpp" />
     <ClCompile Include="Engine\Engine\UI\UI.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Libs\include\imgui\imgui.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Engine\Engine\Simulation\Geometry.h" />
     <ClInclude Include="Engine\Engine\Simulation\Icosahedron.h" />
     <ClInclude Include="Engine\Engine\Simulation\Scene.h" />
+    <ClInclude Include="Engine\Engine\Simulation\SceneSettings.h" />
     <ClInclude Include="Engine\Engine\UI\UI.h" />
     <ClInclude Include="Libs\include\imgui\imconfig.h" />
     <ClInclude Include="Libs\include\imgui\imgui.h" />
